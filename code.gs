@@ -16,8 +16,8 @@ function onFormSubmit(e) {
   // 메시지 생성
   var message =
     name +
-    "님이 가입했어요🎉🎉.\n" +
-    '정보는 다음과 같습니다: \n\n가입시간 "' +
+    " 님이 신청했어요🎉🎉.\n" +
+    '정보는 다음과 같습니다: \n\n신청시간 "' +
     joinTime +
     '", \n학번: "' +
     studentId +
@@ -29,7 +29,7 @@ function onFormSubmit(e) {
 
   var items = [
     {
-      name: "신규 가입 알림",
+      name: "신규 신청 알림",
       value: message,
       inline: false,
     },
