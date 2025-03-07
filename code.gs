@@ -1,44 +1,35 @@
 var POST_URL =
   "https://discord.com/api/webhooks/1347450173797957745/hUdSr6k4Op1mJ27iac_-gf4IZCGOs426WCqpGADDKMAIl-IIJ-3mZhsKZcmEBUW7k1jl";
 
-function onEdit(e) {
-  var sheet = e.range.getSheet();
-  var row = e.range.getRow();
+function onFormSubmit(e) {
+  var sheet = e.source.getActiveSheet(); // 현재 시트 가져오기
+  var lastRow = sheet.getLastRow(); // 마지막 행 가져오기
+  var totalApplicants = lastRow - 1; // 첫 번째 행 제외한 지원자 수 계산
 
-  // 현재 행의 A~D열 데이터를 가져옴 (A: 신청시간, B: 학번, C: 이름, D: 연락처)
-  var rowData = sheet.getRange(row, 1, 1, 4).getValues()[0];
-  var joinTime = rowData[0];
-  var studentId = rowData[1];
-  var name = rowData[2];
-  var contact = rowData[3];
-  var total = row - 1;
+  var rowData = e.values; // 새로 추가된 행의 데이터 가져오기
 
-  // 신청시간이 Date 객체라면 지정한 포맷의 문자열로 변환 (예: "2025. 2. 24 오후 7:30:22")
-  if (joinTime instanceof Date) {
-    joinTime = Utilities.formatDate(
-      joinTime,
-      SpreadsheetApp.getActive().getSpreadsheetTimeZone(),
-      "yyyy. M. d a h:mm:ss"
-    );
-  }
+  var joinTime = rowData[0]; // A열 (가입 시간)
+  var studentId = rowData[1]; // B열 (학번)
+  var name = rowData[2]; // C열 (이름)
+  var contact = rowData[3]; // D열 (연락처)
 
-  // 메시지 구성: 예) "홍길동님이 신청했습니다. 정보는 다음과 같습니다: 신청시간 "2025. 2. 24 오후 7:30:22", 학번: "20241851", 연락처: "010-1234-5678""
+  // 메시지 생성
   var message =
     name +
-    "님이 신청했어요🎉🎉.\n" +
-    '정보는 다음과 같습니다: \n\n신청시간 "' +
+    "님이 가입했어요🎉🎉.\n" +
+    '정보는 다음과 같습니다: \n\n가입시간 "' +
     joinTime +
     '", \n학번: "' +
     studentId +
     '", \n연락처: "' +
     contact +
-    '"\n\n 지금까지 ' +
-    total +
-    "명 신청했어요!";
+    '"\n\n 지금까지 총 ' +
+    totalApplicants +
+    "명이 지원했어요!"; // 첫 번째 행 제외한 총 지원자 수 표시
 
   var items = [
     {
-      name: "신규 신청 알림",
+      name: "신규 가입 알림",
       value: message,
       inline: false,
     },
